@@ -29,19 +29,8 @@ for tr in land_border_soup.find_all('tr'):
     land_border_hash["Country or territory"].append(tds[0].find('a').get_text()) # noqa
 
     lst = []
-    if tds[5].find('div') is not None:
-        txt = tds[5].find('div').find_all('div')[1].get_text().replace('\xa0', ' ').strip()  # noqa
-        print(txt)
-    else:
-        print("NoneType found")
-    lst.append(txt)
-    #  lst.append(tds[5].find('div').find_all('div')[1].get_text())
-    #   if len(tds[5]) > 0 and len(tds[5].find('div').find_all('div')) > 0:
-    #      txt = tds[5].find('div').find_all('div')[1].get_text()
-    #      lst.append([txt])
-
-    #  for bord_cont in tds[5].find('div'):
-    #    lst.append(bord_cont.find('div')[0].get_text())
+    for bord_cont in tds[5].find('div').find('div').find_all('a'):
+        lst.append(bord_cont.get_text())
 
     land_border_hash["Land border neighbours<br>and border length"].append(lst)  # noqa
     #  td5 = tds[5]
