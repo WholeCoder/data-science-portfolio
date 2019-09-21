@@ -1,6 +1,7 @@
 #  import pandas as pd
 from bs4 import BeautifulSoup
 import re
+import networkx as nx
 
 land_border_soup = BeautifulSoup(open("List_of_countries_and_land_borders.htm"), features="html.parser")  # noqa
 
@@ -37,19 +38,20 @@ for tr in land_border_soup.find_all('tr'):
         while txt.strip() != '':
             txt = txt.replace(',', '')
             #  print('txt = ' + txt)
-            print(txt)
+            #  print(txt)
             m = re.search("([\)\(\w\' ]+): [0-9.]+ km \(([0-9.]+) mi\)", txt)
             if m is None:
                 break
             country_name = m.group(1)
-            print("m.group(1) == " + country_name)
+            #  print("m.group(1) == " + country_name)
             country_miles = m.group(2)
-            print("m.group(2) == " + country_miles)
+            #  print("m.group(2) == " + country_miles)
             cities[country_name] = country_miles
             if m.group(0) in txt:
                 txt = txt.replace(m.group(0), '').strip()
     else:
-        print("NoneType found")
+        pass
+        #  print("NoneType found")
     #  lst.append(txt)
     #  lst.append(tds[5].find('div').find_all('div')[1].get_text())
     #   if len(tds[5]) > 0 and len(tds[5].find('div').find_all('div')) > 0:
@@ -62,8 +64,22 @@ for tr in land_border_soup.find_all('tr'):
     land_border_hash["Land border neighbours<br>and border length"].append(cities)  # noqa
     #  td5 = tds[5]
     #  land_border_hash["Land border neighbours<br>and border length"].append(td5)  # noqa
+G = nx.Graph()
 
-for k in land_border_hash.keys():
-    print(k + " -> " + str(land_border_hash[k]))
-    print("\n\n\n----------------------------------------------")
-#  df = pd.DataFrame(land_border_hash)
+#  for k in land_border_hash.keys():
+#    print(k + " -> " + str(land_border_hash[k]))
+#    print("\n\n\n---------------------------------------------- length == " + str(len(land_border_hash[k])))  # noqa
+for x in land_border_hash["Country or territory"]:
+    #  print(x)
+    G.add_node(x)
+
+print('edges--------------------------------')
+
+for i in range(len(land_border_hash["Land border neighbours<br>and border length"])):  # noqa
+    country = land_border_hash["Country or territory"][i]
+    for k in land_border_hash["Land border neighbours<br>and border length"][i].keys():  # noqa)
+        G.add_edge(country, k)
+for n in G.edges:
+    print(n)
+print(G)
+#  df = pd.DataFrame(land_border_has
