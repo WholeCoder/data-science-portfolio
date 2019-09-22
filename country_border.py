@@ -78,9 +78,13 @@ print('edges--------------------------------')
 
 for i in range(len(land_border_hash["Land border neighbours<br>and border length"])):  # noqa
     country = land_border_hash["Country or territory"][i]
+    if "length" not in G.node[country]:
+        G.node[country]["length"] = 0.0
     for k in land_border_hash["Land border neighbours<br>and border length"][i].keys():  # noqa)
         G.add_edge(country, k)
-        G[country][k]['weight'] = float(land_border_hash["Land border neighbours<br>and border length"][i][k])  # noqa
+        ln = float(land_border_hash["Land border neighbours<br>and border length"][i][k])  # noqa
+        #  G[country][k]['weight'] = ln  # noqa
+        G.node[country]["length"] += ln
 for n in G.edges:
     print(n)
 print(G)
