@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup
 import re
 import networkx as nx
+import community
 
 land_border_soup = BeautifulSoup(open("List_of_countries_and_land_borders.htm"), features="html.parser")  # noqa
 
@@ -79,7 +80,14 @@ for i in range(len(land_border_hash["Land border neighbours<br>and border length
     country = land_border_hash["Country or territory"][i]
     for k in land_border_hash["Land border neighbours<br>and border length"][i].keys():  # noqa)
         G.add_edge(country, k)
+        G[country][k]['weight'] = float(land_border_hash["Land border neighbours<br>and border length"][i][k])  # noqa
 for n in G.edges:
     print(n)
 print(G)
 #  df = pd.DataFrame(land_border_has
+
+part = community.best_partition(G)
+print(community.modularity(part, G))
+
+with open("borders-1.graphml", "wb") as graph:
+    nx.write_graphml(G, graph)
